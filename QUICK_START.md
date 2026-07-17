@@ -10,7 +10,15 @@ A short, do-this-then-that guide. For the full details see **`USER_MANUAL.md`**.
 
 ## 1. Open the app
 
-Double-click **`BACnet-MSTP-Explorer.exe`**. The window opens with four areas:
+1. Navigate to the folder that contains the app:
+
+   ```
+   ..\BACnet explorer\dist\
+   ```
+
+2. Double-click **`BACnet-MSTP-Explorer.exe`** to launch it.
+
+The window opens with four areas:
 
 ```
 ┌────────────── Toolbar: Port · Baud · Master MAC · Connect ──────────────┐
