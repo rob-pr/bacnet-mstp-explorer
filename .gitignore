@@ -1,0 +1,23 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# PyInstaller build artifacts
+build/
+dist/
+
+# Runtime capture logs
+capture.log
+capture_*.log
+
+# Claude Code local settings
+.claude/settings.local.json
+
+# OS / editor
+Thumbs.db
+.DS_Store
+.vscode/
+.idea/
