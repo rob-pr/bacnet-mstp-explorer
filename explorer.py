@@ -34,6 +34,8 @@ import bacnet
 import mstp
 from mstp_master import BROADCAST, MSTPMaster
 
+APP_VERSION = "1.00.02"
+
 BAUD_RATES = [9600, 19200, 38400, 76800]
 DEFAULT_BAUD = 38400
 DEFAULT_MASTER_MAC = 127
@@ -78,7 +80,7 @@ class DeviceTable:
 class ExplorerApp:
     def __init__(self, root: tk.Tk):
         self.root = root
-        root.title("BACnet MS/TP Explorer")
+        root.title(f"BACnet MS/TP Explorer  v{APP_VERSION}")
         root.geometry("1180x760")
         root.minsize(960, 600)
 
@@ -861,6 +863,7 @@ class ContinuousWriteWindow:
         self._stop = threading.Event()
         self._thread: threading.Thread | None = None
         self._sent = 0
+        self._acked = 0  # writes the device acknowledged (Simple-ACK)
         # Plain attributes read by the worker (updated live from Tk on GUI thread).
         self._live_value = init_value
         self._live_interval = 3.0
@@ -988,11 +991,14 @@ class ContinuousWriteWindow:
                                          self.prop_id, value_bytes,
                                          self.array_index, self._priority)
                 self._sent += 1
-                self._post(f"sent {self._sent}  ✓   (value={self._live_value}, "
+                self._acked += 1
+                self._post(f"sent {self._sent} · resp {self._acked}  ✓   "
+                           f"(value={self._live_value}, "
                            f"every {self._live_interval:g}s)", self.BG_RUN)
             except Exception as exc:  # bad value / timeout / error PDU
                 self._sent += 1
-                self._post(f"sent {self._sent}  ✗   {exc}", self.BG_ERR)
+                self._post(f"sent {self._sent} · resp {self._acked}  ✗   {exc}",
+                           self.BG_ERR)
             self._stop.wait(self._live_interval)
 
     def _post(self, msg, bg):
